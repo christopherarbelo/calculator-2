@@ -15,7 +15,7 @@
     grid-template: repeat(5, 1fr) / repeat(4, 1fr);
     grid-gap: 0;
     grid-template-areas: 
-    "clear null null divide"
+    "clear backspace inverse-sign divide"
     "seven eight nine multiply"
     "four five six subtract"
     "one two three add"
@@ -39,8 +39,12 @@
     grid-area: clear;
 }
 
-.null {
-    grid-area: null;
+.backspace {
+    grid-area: backspace;
+}
+
+.inverse-sign {
+    grid-area: inverse-sign;
 }
 
 .divide {

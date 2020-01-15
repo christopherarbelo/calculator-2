@@ -7,6 +7,7 @@ function subtract(num1, num2) {
 }
 
 function divide(num1, num2) {
+    if (num2 === 0) return undefined;
     return num1 / num2;
 }
 
@@ -60,6 +61,9 @@ function populateValues(value, valueType) {
             clearArray(operand, operands, operators);
             clearDisplay();
             break;
+        case 'Backspace':
+            backspace();
+            break;
         default:
             console.log('error');
             break;
@@ -67,8 +71,10 @@ function populateValues(value, valueType) {
 }
 
 function updateOperand(value) {
-    operand.push(value);
-    displayValue(value);
+    if (value === '.' && operand.findIndex(num => num === '.') === -1 || value !== '.') {
+        operand.push(value);
+        displayValue(value);
+    }
 }
 
 function updateOperator(value) {
@@ -77,8 +83,10 @@ function updateOperator(value) {
     if (operators.length > 1) {
         preformOperation();
     }
-    clearDisplay();
-    displayValue(value);
+    if (operators.length > 0) {
+        clearDisplay();
+        displayValue(value);
+    }
 }
 
 function getAnswer(value) {
@@ -108,6 +116,31 @@ function preformOperation() {
     }
 }
 
+function backspace() {
+    let value = DISPLAY.textContent;
+    let valueType = categorizeValue(value);
+    if (valueType === 'operand') {
+        if (operands.length > 0) {
+            let revisedNumber = `${operands[operands.length - 1]}`.split('');
+            revisedNumber.pop()
+            revisedNumber = revisedNumber.join('');
+            if (revisedNumber) {
+                operands[operands.length - 1] = +revisedNumber;
+            } else {
+                operands.pop();
+            }
+        } else {
+            operand.pop();
+        }
+    } else if (valueType === 'operator') {
+        operators.pop();
+    }
+    clearDisplay();
+    if(operands[operands.length - 1]) {
+        displayValue(operands[operands.length - 1]);
+    }
+}
+
 function displayValue(value) {
     if (categorizeValue(DISPLAY.textContent) === 'operator') {
         DISPLAY.textContent = '';
@@ -125,7 +158,7 @@ function transferOperand() {
 function transferOperator(value) {
     if (operands.length > operators.length) {
         operators.push(value);
-    } else if (operands.length === operators.length) {
+    } else if (operands.length === operators.length && operands.length !== 0) {
         operators.pop();
         operators.push(value);
     }
