@@ -38,6 +38,12 @@ let operand = [];
 let operands = [];
 let operators = [];
 
+window.addEventListener('keydown', (e) => {
+    let keyCode = e.key;
+    let valueType = categorizeValue(keyCode);
+    populateValues(keyCode, valueType);
+});
+
 BUTTONS.forEach(button => button.addEventListener('click', (e) => {
     let value = e.target.textContent;
     let valueType = categorizeValue(value);
@@ -54,7 +60,7 @@ function populateValues(value, valueType) {
         case 'operator':
             updateOperator(value);
             break;
-        case '=':
+        case 'evaluate':
             getAnswer(value);
             break;
         case 'AC':
@@ -63,9 +69,6 @@ function populateValues(value, valueType) {
             break;
         case 'Backspace':
             backspace();
-            break;
-        default:
-            console.log('error');
             break;
     }
 }
@@ -136,8 +139,10 @@ function backspace() {
         operators.pop();
     }
     clearDisplay();
-    if(operands[operands.length - 1]) {
+    if (operands.length > 0) {
         displayValue(operands[operands.length - 1]);
+    } else if (operand.length > 0) {
+        displayValue(operand.join(''));
     }
 }
 
@@ -173,6 +178,10 @@ function categorizeValue(value) {
         return 'operand';
     } else if (/(\/|\*|\+|\-)/.test(value)) {
         return 'operator'
+    } else if (/(=|Enter)/.test(value)) {
+        return 'evaluate'
+    } else if (/c/.test(value)) {
+        return 'AC'
     }
     return value;
 }
