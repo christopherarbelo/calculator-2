@@ -42,6 +42,10 @@ window.addEventListener('keydown', (e) => {
     let keyCode = e.key;
     let valueType = categorizeValue(keyCode);
     populateValues(keyCode, valueType);
+    // prevent enter button from selecting active button
+    if (keyCode === 'Enter' && e.target.nodeName === 'BUTTON' && e.target.type === 'button') {
+        e.preventDefault()
+    }
 });
 
 BUTTONS.forEach(button => button.addEventListener('click', (e) => {
